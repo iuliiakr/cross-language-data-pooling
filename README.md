@@ -7,28 +7,32 @@ This note addresses the following question:
 
 In mid- and low-resource language projects, available data volume and quality frequently fall short of what is required for successful model training or fine-tuning. Augmenting training data with samples from other languages is therefore a common mitigation strategy.
 
-However, what constitutes a "related" language is not universal and differs substantially between text-to-speech and speech-to-speech systems. Linguistic similarity alone is insufficient as a decision criterion.
+However, the notion of a “related” language is not universal and differs substantially between text-to-speech (TTS) and speech-to-speech (STS) systems, because the representations being shared—and the errors being exposed—are fundamentally different.
 
-## Task-Dependent Effects of Pooling
-
-### Text-to-Speech (TTS)
-
-In TTS, pooling often introduces systematic artifacts such as accent leakage, reduced naturalness, or unstable phoneme realization. These effects are frequently underrepresented in automated metrics and require human validation.
-
-### Speech-to-Speech (STS)
-
-In STS systems, errors compound across recognition and synthesis. Pooling increases the likelihood of latent misalignment, where pronunciation, prosody, or speaker characteristics drift in ways that are difficult to attribute to a single stage.
+Crucially, a language pair that pools successfully for TTS may still be problematic for STS, and vice versa. The determining factor is not linguistic proximity per se, but whether shared representations remain interpretable and controllable at the point where errors become perceptually visible.
 
 &nbsp;
 
-## Error Surface Expansion and Evaluability
 
-A critical but often overlooked effect of adding languages is that it expands the space of possible error modes. As the number of pooled languages grows:
-- Failure modes become more heterogeneous
-- Automated metrics lose sensitivity to task-specific regressions
-- Confidence or quality signals become harder to calibrate across languages
+## When Cross-Language Pooling Helps — and When It Hurts
 
-As a result, broader pooling frequently necessitates increased human evaluation to detect errors that are not reliably captured by objective measures. This requirement should be considered an architectural implication of pooling, not an operational afterthought.
+Cross-language data pooling tends to **improve** model behavior when the following conditions hold:
+
+- Shared representations remain stable across languages, such that adding data reduces variance without introducing systematic perceptual artifacts.
+- Dominant error modes are aligned, meaning that errors introduced by one language resemble those already present rather than creating new, language-specific failure classes.
+- Evaluation signals remain interpretable, allowing regressions to be detected without disproportionately expanding human evaluation effort.
+- Model capacity and disentanglement are sufficient to prevent language-specific characteristics from leaking into shared outputs (e.g., accent, prosody, or speaker traits).
+
+Conversely, pooling introduces avoidable architectural **risk** when:
+
+- Additional languages introduce new perceptual error modes that are not surfaced by existing automated metrics.
+- Shared representations become less controllable, leading to accent leakage, unstable pronunciation, or prosodic drift.
+- Error attribution becomes ambiguous, making it difficult to localize failures to a specific language or subsystem.
+- The marginal data gain is outweighed by loss of observability, requiring substantially more human evaluation to maintain quality guarantees.
+
+In these cases, pooling shifts complexity from data scarcity to evaluation and control, often without a commensurate gain in end-user quality.
+
+&nbsp; 
 
 ## Architectural Implication
 
