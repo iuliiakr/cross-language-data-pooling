@@ -7,7 +7,7 @@ This note addresses the following question:
 
 In mid- and low-resource language projects, available data volume and quality frequently fall short of what is required for successful model training or fine-tuning. Augmenting training data with samples from other languages is therefore a common mitigation strategy.
 
-However, what constitutes a “related” language is not universal. Relatedness depends on the task, representation, and evaluation surface - for example, whether the system targets text-to-speech (TTS) or speech-to-speech (STS). Linguistic similarity alone is insufficient as a decision criterion.
+However, what constitutes a "related" language is not universal and differs substantially between text-to-speech and speech-to-speech systems. Linguistic similarity alone is insufficient as a decision criterion.
 
 ## Task-Dependent Effects of Pooling
 
