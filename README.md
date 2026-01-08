@@ -1,6 +1,47 @@
-# Cross-Language Data Pooling in Multilingual Speech Systems
+# Cross-Language Data Pooling in Multilingual Text-to-Speech and Speech-to-Speech Systems
 
-This repository contains an architectural note on cross-language data pooling decisions in multilingual speech systems.
-It focuses on when pooling helps, when it hurts, and why, across different speech tasks with concrete, experience-driven examples.
+In multilingual speech modeling, pooling data across languages is often treated as a default scalability strategy. In practice, indiscriminate pooling can introduce **negative transfer**, degrade performance on minority languages, and obscure failure signals that would otherwise be detectable in more constrained systems.
 
-The goal is not to propose a universal rule, but to articulate task-dependent criteria and failure modes that arise when training multilingual STS (speech-to-speech) and TTS systems.
+This note addresses the following question:
+> Under what conditions does cross-language data pooling improve model behavior, and when does it introduce avoidable architectural risk?
+
+In mid- and low-resource language projects, available data volume and quality frequently fall short of what is required for successful model training or fine-tuning. Augmenting training data with samples from other languages is therefore a common mitigation strategy.
+
+However, what constitutes a “related” language is not universal. Relatedness depends on the task, representation, and evaluation surface - for example, whether the system targets text-to-speech (TTS) or speech-to-speech (STS). Linguistic similarity alone is insufficient as a decision criterion.
+
+## Task-Dependent Effects of Pooling
+
+### Text-to-Speech (TTS)
+
+In TTS, pooling often introduces systematic artifacts such as accent leakage, reduced naturalness, or unstable phoneme realization. These effects are frequently underrepresented in automated metrics and require human validation.
+
+### Speech-to-Speech (STS)
+
+In STS systems, errors compound across recognition and synthesis. Pooling increases the likelihood of latent misalignment, where pronunciation, prosody, or speaker characteristics drift in ways that are difficult to attribute to a single stage.
+
+&nbsp;
+
+## Error Surface Expansion and Evaluability
+
+A critical but often overlooked effect of adding languages is that it expands the space of possible error modes. As the number of pooled languages grows:
+- Failure modes become more heterogeneous
+- Automated metrics lose sensitivity to task-specific regressions
+- Confidence or quality signals become harder to calibrate across languages
+
+As a result, broader pooling frequently necessitates increased human evaluation to detect errors that are not reliably captured by objective measures. This requirement should be considered an architectural implication of pooling, not an operational afterthought.
+
+## Architectural Implication
+
+Cross-language data pooling is not a purely data-volume decision. It is a trade-off between:
+- Improved robustness or coverage
+- Expanded uncertainty in model behavior
+- Reduced observability of failures without additional evaluation mechanisms
+
+The decision to pool languages should therefore be **task-specific, representation-aware, and evaluation-aware**, rather than driven solely by availability or convenience.
+
+&nbsp;
+
+## Status
+
+Stable architectural note
+Last updated: January, 2026
