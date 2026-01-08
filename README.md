@@ -57,7 +57,7 @@ The decision to pool languages should therefore be **task-specific, representati
 
 ## Status
 
-Stable architectural note
-Last updated: January, 2026
+**Status:** Stable architectural note
+**Last updated:** January, 2026
 
 This document reflects accumulated practical experience and is not tied to a specific model, dataset, or employer.
